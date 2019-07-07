@@ -67,7 +67,7 @@ spec:
     spec:
       containers:
       - name: hello-world
-        image: github.com/xmlking/ko-demo/main
+        image: github.com/xmlking/ko-demo
 ```
 
 ### Apply
@@ -104,5 +104,8 @@ Hello world !
 If all you want to do is build the Go binary and publish an image to the registry then, with the Demo project cloned in your $GOPATH.
 
 ```bash
-ko publish github.com/xmlking/ko-demo/main
+ko publish github.com/xmlking/ko-demo
+
+ko resolve -P -f config/deploy.yaml
+ko resolve --local -f config/deploy.yaml
 ```
