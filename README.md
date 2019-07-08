@@ -61,13 +61,13 @@ kind: Deployment
 metadata:
   name: hello-world
 spec:
-...
-  template:
-...
-    spec:
-      containers:
-      - name: hello-world
-        image: github.com/xmlking/ko-demo
+---
+template:
+---
+spec:
+  containers:
+    - name: hello-world
+      image: github.com/xmlking/ko-demo
 ```
 
 ### Deploying
@@ -76,6 +76,9 @@ Then to start the build, containerize and deploy a single `ko` command is necess
 
 ```bash
 ko apply -f config/
+
+# -P or --preserve-import-paths
+ko apply -P -f config/
 
 # Deploy to minikube w/o registry.
 ko apply -L -f config/
@@ -113,12 +116,28 @@ ko delete -f config/
 
 ### Build/publish but do not deploy
 
-If all you want to do is build the Go binary and publish an image to the registry then, with the Demo project cloned in your $GOPATH.
+If all you want to do is build the Go binary and publish an image to the registry then, with the Demo project cloned in your \$GOPATH.
 
 ```bash
 ko publish github.com/xmlking/ko-demo
 # publish to local docker repo
 ko resolve --local -f config/
+```
+
+### Release Management
+
+ko is also useful to help manageing releases
+
+```bash
+ko resolve -P -f config/ > release.yaml
+```
+
+This will publish all of the binary components as container images to gcr.io/xmlking/... and create a `release.yaml` file containing all of the configuration for your application with inlined image references.
+
+This resulting configuration may then be installed onto Kubernetes clusters via:
+
+```bash
+kubectl apply -f release.yaml
 ```
 
 ### Workaround
