@@ -70,12 +70,18 @@ spec:
         image: github.com/xmlking/ko-demo
 ```
 
-### Apply
+### Deploying
 
 Then to start the build, containerize and deploy a single `ko` command is necessary.
 
 ```bash
 ko apply -f config/
+
+# Deploy to minikube w/o registry.
+ko apply -L -f config/
+
+# This is the same as above.
+KO_DOCKER_REPO=ko.local ko apply -f config/
 ```
 
 To deploy in a different namespace:
@@ -89,14 +95,20 @@ You will see a Pod running and you will be able to call your Go function:
 ```bash
 $ kubectl get pods
 NAME                                            READY     STATUS      RESTARTS   AGE
-hello-world-54557f6647-wsng6                    1/1       Running     0          50s
+hello-world-59868cf5f9-5gqhj                    1/1       Running     0          5s
 
-$ kubectl port-forward pod/hello-world-54557f6647-wsng6 8080:8080 &
+$ kubectl port-forward pod/hello-world-59868cf5f9-5gqhj 8080:8080 &
 [1] 99038
 
 $ curl localhost:8080
 Handling connection for 8080
 Hello world !
+```
+
+### Teardown
+
+```bash
+ko delete -f config/
 ```
 
 ### Build/publish but do not deploy
@@ -105,7 +117,17 @@ If all you want to do is build the Go binary and publish an image to the registr
 
 ```bash
 ko publish github.com/xmlking/ko-demo
+# publish to local docker repo
+ko resolve --local -f config/
+```
 
-ko resolve -P -f config/deploy.yaml
-ko resolve --local -f config/deploy.yaml
+### Workaround
+
+ko does not work with `Go Modules` yet. [WIP](https://github.com/google/ko/issues/7)
+
+As a workaround I symlinked my source code into the default GOPATH (~/go/src/...)
+
+```bash
+cd ~/go/src/github.com/xmlking
+ln -s /Developer/Work/go/ko-demo .
 ```
