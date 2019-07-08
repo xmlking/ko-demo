@@ -47,5 +47,6 @@ _test
 *.prof
 
 # Binaries
-bin/
+bin/*
+!bin/.gitkeep
 release.yaml
