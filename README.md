@@ -8,17 +8,12 @@ It allows you to:
 - containerize them and publish to a registry
 - automatically update Kubernetes manifests to references the correct container image
 
-## Install
+## Prerequisite
 
-ko can be installed via:
-
-```bash
-go get github.com/google/ko/cmd/ko
-```
-
-To update your installation:
+> run then outside **this project root** and `$GOPATH`
 
 ```bash
+# go lang  build/publish/deploy tool
 go get -u github.com/google/ko/cmd/ko
 ```
 
@@ -75,35 +70,35 @@ spec:
 Then to start the build, containerize and deploy a single `ko` command is necessary.
 
 ```bash
-ko apply -f config/
+ko apply -f deploy/
 
 # -P or --preserve-import-paths
-ko apply -P -f config/
+ko apply -P -f deploy/
 
 # Deploy to minikube w/o registry.
-ko apply -L -f config/
+ko apply -L -f deploy/
 
 # This is the same as above.
-KO_DOCKER_REPO=ko.local ko apply -f config/
+KO_DOCKER_REPO=ko.local ko apply -f deploy/
 ```
 
 To deploy in a different namespace:
 
 ```bash
-ko -n nondefault apply -f config/
+ko -n nondefault apply -f deploy/
 ```
 
 You will see a Pod running and you will be able to call your Go function:
 
 ```bash
-$ kubectl get pods
+kubectl get pods
 NAME                                            READY     STATUS      RESTARTS   AGE
 hello-world-59868cf5f9-5gqhj                    1/1       Running     0          5s
 
-$ kubectl port-forward pod/hello-world-59868cf5f9-5gqhj 8080:8080 &
+kubectl port-forward pod/hello-world-59868cf5f9-5gqhj 8080:8080 &
 [1] 99038
 
-$ curl localhost:8080
+curl localhost:8080
 Handling connection for 8080
 Hello world !
 ```
@@ -111,7 +106,7 @@ Hello world !
 ### Teardown
 
 ```bash
-ko delete -f config/
+ko delete -f deploy/
 ```
 
 ### Build/publish but do not deploy
@@ -121,7 +116,7 @@ If all you want to do is build the Go binary and publish an image to the registr
 ```bash
 ko publish github.com/xmlking/ko-demo
 # publish to local docker repo
-ko resolve --local -f config/
+ko resolve -L -f deploy/
 ```
 
 ### Release Management
@@ -129,7 +124,10 @@ ko resolve --local -f config/
 ko is also useful to help manageing releases
 
 ```bash
-ko resolve -P -f config/ > release.yaml
+# publish to  docker repo ar KO_DOCKER_REPO
+ko resolve -P -f deploy/ > release.yaml
+# publish to local docker repo
+ko resolve -P -L -f deploy/ > release.yaml
 ```
 
 This will publish all of the binary components as container images to gcr.io/xmlking/... and create a `release.yaml` file containing all of the configuration for your application with inlined image references.
@@ -140,13 +138,10 @@ This resulting configuration may then be installed onto Kubernetes clusters via:
 kubectl apply -f release.yaml
 ```
 
-### Workaround
-
-ko does not work with `Go Modules` yet. [WIP](https://github.com/google/ko/issues/7)
-
-As a workaround I symlinked my source code into the default GOPATH (~/go/src/...)
+### Run Docker
 
 ```bash
-cd ~/go/src/github.com/xmlking
-ln -s /Developer/Work/go/ko-demo .
+docker run -it -p 8080:8080  ko.local/github.com/xmlking/ko-demo
+# test
+curl http://localhost:8080
 ```
