@@ -10,7 +10,7 @@
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
   // Terminal: Override Terminal Colors with Solarized Dark regardless of Theme
-  "terminal.integrated.fontFamily": "'SourceCodePro+Powerline+Awesome Regular', Meslo LG M for Powerline, Source Code Pro for Powerline, SourceCodePro-ExtraLight, monospace",
+  "terminal.integrated.fontFamily": "'SourceCodePro+Powerline+Awesome Regular', Source Code Pro for Powerline, monospace, Meslo LG M for Powerline",
   "terminal.integrated.fontSize": 14,
   "workbench.colorCustomizations": {
     "terminal.foreground": "#839496",
@@ -21,8 +21,8 @@
   "rest-client.environmentVariables": {
     "$shared": {
       "client-id": "ngxapi",
-      "username": "sumo3",
-      "password": "demo",
+      "username": "test",
+      "password": "test",
       "api-gateway-url": "http://localhost:8080"
     },
     "local": {
@@ -32,8 +32,8 @@
     "local-admin": {
       "oidc-issuer-url": "https://keycloak.kashmora.com/auth/realms/ngx",
       "api-url": "http://localhost:3000",
-      "username": "ngxadmin",
-      "password": "ngxadmin"
+      "username": "ngx-admin",
+      "password": "ngx-admin"
     },
     "production": {
       "oidc-issuer-url": "https://keycloak.kashmora.com/auth/realms/ngx",

@@ -58,7 +58,7 @@ make list
 make clean
 # Delete all of my clusters
 make nginx1
-
+# create cluster and deploy nginx
 ```
 
 ## Reference
